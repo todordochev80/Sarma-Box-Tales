@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="alert alert-danger p-5 shadow">
+    <h3>Сигурен ли си, че искаш да изтриеш "{{ object.title }}"?</h3>
+    <p>Това действие е необратимо!</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Да, изтрий историята</button>
+        <a href="{% url 'story-detail' object.pk %}" class="btn btn-secondary">Не, върни ме обратно</a>
+    </form>
+</div>
+{% endblock %}

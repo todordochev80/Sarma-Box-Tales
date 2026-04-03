@@ -4,21 +4,38 @@ from django.db import models
 class Storyteller(AbstractUser):
     nickname = models.CharField(
         max_length=50,
+        null=True,
         blank=True,
-        # TODO - промени името
-        help_text=""
+        verbose_name="Псевдоним",
+        help_text="Името, с което ще се подписвате под историите."
     )
     bio = models.TextField(
         max_length=500,
         blank=True,
-        # TODO - промени инфото
-        help_text=""
+        verbose_name="Биография",
+        help_text="Разкажете накратко за Вашия кулинарен или разказвачески опит."
+    )
+    location = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="Регион/Град",
+        help_text="От коя част на света е историята Ви?"
     )
     rank = models.CharField(
         max_length=30,
-        # TODO - промени ранглиста
-        default="Fresh Sarma"
+        default="Лозова сърмичка",
+        verbose_name="Ранг",
+        help_text="Вашият статус в общността на Sarma Box Tales"
+    )
+    website = models.URLField(
+        blank=True,
+        verbose_name="Личен сайт/Блог"
     )
 
+    class Meta:
+        verbose_name = "Разказвач"
+        verbose_name_plural = "Разказвачи"
+
     def __str__(self):
-        return self.username
+        return self.nickname if self.nickname else self.username
+

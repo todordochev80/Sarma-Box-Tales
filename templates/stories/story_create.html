@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">Сподели своята сарма-история</h2>
+        <form method="post" class="card p-4 shadow">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success mt-3">Публикувай</button>
+            <a href="{% url 'story-list' %}" class="btn btn-link mt-3 text-muted">Отказ</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

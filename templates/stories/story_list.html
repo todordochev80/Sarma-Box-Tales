@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Всички Абсурдни Истории</h1>
+<div class="row">
+    {% for story in stories %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ story.title }}</h5>
+                <p class="card-text">{{ story.content|truncatewords:20 }}</p>
+                <a href="{% url 'story-detail' story.pk %}" class="btn btn-primary">Прочети повече</a>
+            </div>
+            <div class="card-footer text-muted">
+                От {{ story.author.username }}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>Все още няма истории. Бъди първият разказвач!</p>
+    {% endfor %}
+</div>
+{% endblock %}

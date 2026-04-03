@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Редактиране на: {{ object.title }}</h2>
+<form method="post" class="card p-4 shadow">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-warning">Запази промените</button>
+    <a href="{% url 'story-detail' object.pk %}" class="btn btn-secondary">Отказ</a>
+</form>
+{% endblock %}
