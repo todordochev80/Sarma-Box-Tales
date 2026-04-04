@@ -9,6 +9,10 @@ class Storyteller(AbstractUser):
         verbose_name="Псевдоним",
         help_text="Името, с което ще се подписвате под историите."
     )
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+
+    email = models.EmailField(unique=True, blank=False)
+
     bio = models.TextField(
         max_length=500,
         blank=True,

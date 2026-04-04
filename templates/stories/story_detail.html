@@ -1,14 +1,19 @@
 {% extends 'base.html' %}
-
 {% block title %}{{ story.title }}{% endblock %}
 
 {% block content %}
+    <div class="mb-4">
+    <a href="{% url 'story-list' %}" class="btn btn-outline-primary btn-sm mb-3">
+    ← Към всички истории
+    </a>
+    </div>
+
 <div class="container mt-4">
     <article class="card shadow-sm p-4">
         <h1 class="display-4 text-primary">{{ story.title }}</h1>
-        
+
         <p class="text-muted border-bottom pb-2">
-            📅 {{ story.created_at|date:"d M Y" }} | 
+            📅 {{ story.created_at|date:"d M Y" }} |
             📁 Категория: <span class="badge bg-secondary">{{ story.category.name }}</span>
         </p>
 

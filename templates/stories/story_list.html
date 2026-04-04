@@ -1,23 +1,82 @@
 {% extends 'base.html' %}
 
+{% block title %}Всички истории - Sarma Box Tales{% endblock %}
+
 {% block content %}
-<h1 class="mb-4">Всички Абсурдни Истории</h1>
-<div class="row">
-    {% for story in stories %}
-    <div class="col-md-4 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">{{ story.title }}</h5>
-                <p class="card-text">{{ story.content|truncatewords:20 }}</p>
-                <a href="{% url 'story-detail' story.pk %}" class="btn btn-primary">Прочети повече</a>
-            </div>
-            <div class="card-footer text-muted">
-                От {{ story.author.username }}
-            </div>
+<div class="container">
+    <h1 class="mb-4">Всички Абсурдни Истории 🥟</h1>
+
+    <div class="card shadow-sm mb-5 bg-light">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold">Търси думичка:</label>
+                    <input type="text" name="q" class="form-control" placeholder="Заглавие или текст..." value="{{ request.GET.q }}">
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold">Категория:</label>
+                    <select name="category" class="form-select">
+                        <option value="">Всички категории</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"i" %}selected{% endif %}>
+                                {{ cat.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold">Разказвач:</label>
+                    <select name="author" class="form-select">
+                        <option value="">Всички автори</option>
+                        {% for auth in authors %}
+                            <option value="{{ auth.id }}" {% if request.GET.author == auth.id|stringformat:"i" %}selected{% endif %}>
+                                {{ auth.nickname|default:auth.username }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex">
+                    <button type="submit" class="btn btn-primary w-100 me-2">Филтрирай</button>
+                    <a href="{% url 'story-list' %}" class="btn btn-outline-secondary" title="Изчисти">✖</a>
+                </div>
+            </form>
         </div>
     </div>
-    {% empty %}
-    <p>Все още няма истории. Бъди първият разказвач!</p>
-    {% endfor %}
+
+    <div class="row">
+        {% for story in stories %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ story.title }}</h5>
+                        
+                        <div class="mb-2">
+                            {% for tag in story.tags.all %}
+                                <span class="badge rounded-pill bg-info text-dark small">#{{ tag.name }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <p class="card-text text-muted small">
+                            {{ story.content|truncatechars:100 }}
+                        </p>
+                        <a href="{% url 'story-detail' story.pk %}" class="btn btn-primary btn-sm">Прочети повече</a>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0 text-muted small">
+                        От {{ story.author.nickname|default:story.author.username }}
+                        <br>
+                        📁 {{ story.category.name|default:"Без категория" }}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center my-5">
+                <h3 class="text-muted">Няма намерени истории по тези критерии. 🤷‍♂️</h3>
+                <p>Опитай с друга думичка или изчисти филтрите.</p>
+            </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
