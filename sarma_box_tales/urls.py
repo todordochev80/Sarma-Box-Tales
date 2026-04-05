@@ -1,28 +1,17 @@
-"""
-URL configuration for sarma_box_tales project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from common.views import HomeView
+from stories.api_views import StoryListAPIView, StoryDetailAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='home'),
     path('accounts/', include('accounts.urls')),
     path('stories/', include('stories.urls')),
+    path('', include('common.urls')),
+    path('comments/', include('actions.urls')),
+    path('api/stories/', StoryListAPIView.as_view(), name='api-stories-list'),
+    path('api/stories/<int:pk>/', StoryDetailAPIView.as_view(), name='api-story-detail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

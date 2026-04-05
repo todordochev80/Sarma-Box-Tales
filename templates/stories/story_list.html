@@ -64,8 +64,12 @@
                         </p>
                         <a href="{% url 'story-detail' story.pk %}" class="btn btn-primary btn-sm">Прочети повече</a>
                     </div>
+
                     <div class="card-footer bg-transparent border-top-0 text-muted small">
-                        От {{ story.author.nickname|default:story.author.username }}
+                        От
+                        <a href="{% url 'story-list' %}?author={{ story.author.id }}" class="text-decoration-none fw-bold text-secondary">
+                            {{ story.author.nickname|default:story.author.username }}
+                        </a>
                         <br>
                         📁 {{ story.category.name|default:"Без категория" }}
                     </div>

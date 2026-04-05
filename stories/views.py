@@ -3,13 +3,12 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-
 from accounts.models import Storyteller
 from .forms import StoryCreateForm
 from django.db.models import Q
 from .models import Story, Category, Tag
-
 from stories.models import Story
+from actions.forms import CommentForm
 
 
 
@@ -54,6 +53,11 @@ class StoryDetailView(DetailView):
     model = Story
     template_name = 'stories/story_detail.html'
     context_object_name = 'story'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        return context
 
 
 

@@ -2,6 +2,13 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import Storyteller
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django import forms
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 class StorytellerCreationForm(UserCreationForm):
     email = forms.EmailField(
@@ -59,14 +66,6 @@ class StorytellerChangeForm(UserChangeForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class': 'form-control'})
-
-
-from django.contrib.auth import authenticate
-from django.contrib.auth.forms import AuthenticationForm
-from django import forms
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
 
 
 class UserLoginForm(AuthenticationForm):

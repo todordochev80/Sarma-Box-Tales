@@ -12,15 +12,10 @@ class Tag(models.Model):
 
 
 class Story(models.Model):
-    CATEGORY_CHOICES = [
-        ('Absurd', 'Абсурд'),
-        ('Urban', 'Градска легенда'),
-        ('Daily', 'Ежедневие'),
-    ]
+
 
     title = models.CharField(max_length=100, help_text="")
     content = models.TextField(help_text="")
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='Absurd')
     created_at = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, related_name='stories', blank=True)
 

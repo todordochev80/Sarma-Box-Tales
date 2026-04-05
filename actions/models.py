@@ -22,10 +22,18 @@ class Comment(models.Model):
         related_name='comments'
     )
 
+    initial_comment = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='replies'
+    )
+
     class Meta:
         verbose_name = "Коментар"
         verbose_name_plural = "Коментари"
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"Коментар от {self.author.username} към '{self.story.title}'"
+        return f"Коментар от {self.author.username} за '{self.story.title}'"
