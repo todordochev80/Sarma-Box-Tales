@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from .models import Storyteller
 from .forms import StorytellerChangeForm, StorytellerCreationForm
 from .tasks import send_welcome_email
+from django.views.generic import DetailView
 
 class RegisterView(CreateView):
     form_class = StorytellerCreationForm
@@ -28,3 +29,10 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = Storyteller
+    template_name = 'accounts/profile_detail.html'
+    context_object_name = 'profile'

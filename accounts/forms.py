@@ -60,10 +60,19 @@ class StorytellerChangeForm(UserChangeForm):
     password = None
     class Meta:
         model = Storyteller
-        fields = ("nickname", "bio", "location", "website", "avatar")
+        fields = ("username", "email", "nickname", "bio", "location", "website", "avatar")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        if 'username' in self.fields:
+            self.fields['username'].disabled = True
+            self.fields['username'].label = "Потребителско име (не се променя)"
+
+        if 'email' in self.fields:
+            self.fields['email'].disabled = True
+            self.fields['email'].label = "Имейл (не се променя)"
+
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class': 'form-control'})
 

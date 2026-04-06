@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-
-{% block title %}Всички истории - Sarma Box Tales{% endblock %}
+{% load reading_time_filter %} {% block title %}Всички истории - Sarma Box Tales{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -13,7 +12,6 @@
                     <label class="form-label small fw-bold">Търси думичка:</label>
                     <input type="text" name="q" class="form-control" placeholder="Заглавие или текст..." value="{{ request.GET.q }}">
                 </div>
-
                 <div class="col-md-3">
                     <label class="form-label small fw-bold">Категория:</label>
                     <select name="category" class="form-select">
@@ -25,7 +23,6 @@
                         {% endfor %}
                     </select>
                 </div>
-
                 <div class="col-md-3">
                     <label class="form-label small fw-bold">Разказвач:</label>
                     <select name="author" class="form-select">
@@ -37,10 +34,9 @@
                         {% endfor %}
                     </select>
                 </div>
-
                 <div class="col-md-2 d-flex">
                     <button type="submit" class="btn btn-primary w-100 me-2">Филтрирай</button>
-                    <a href="{% url 'story-list' %}" class="btn btn-outline-secondary" title="Изчисти">✖</a>
+                    <a href="{% url 'story-list' %}" class="btn btn-outline-secondary">✖</a>
                 </div>
             </form>
         </div>
@@ -52,7 +48,7 @@
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title text-primary">{{ story.title }}</h5>
-                        
+
                         <div class="mb-2">
                             {% for tag in story.tags.all %}
                                 <span class="badge rounded-pill bg-info text-dark small">#{{ tag.name }}</span>
@@ -62,6 +58,13 @@
                         <p class="card-text text-muted small">
                             {{ story.content|truncatechars:100 }}
                         </p>
+
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                ⏱️време за четене {{ story.content|reading_time }}
+                            </small>
+                        </div>
+
                         <a href="{% url 'story-detail' story.pk %}" class="btn btn-primary btn-sm">Прочети повече</a>
                     </div>
 
@@ -74,11 +77,6 @@
                         📁 {{ story.category.name|default:"Без категория" }}
                     </div>
                 </div>
-            </div>
-        {% empty %}
-            <div class="col-12 text-center my-5">
-                <h3 class="text-muted">Няма намерени истории по тези критерии. 🤷‍♂️</h3>
-                <p>Опитай с друга думичка или изчисти филтрите.</p>
             </div>
         {% endfor %}
     </div>

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <div class="card border-danger mx-auto shadow" style="max-width: 500px;">
+        <div class="card-body p-5">
+            <h3 class="text-danger mb-4">Изтриване на коментар 🗑️</h3>
+            <p>Сигурен ли си, че искаш да премахнеш този коментар от историята?</p>
+            <p class="fst-italic text-muted">"{{ object.text|truncatechars:50 }}"</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger btn-lg me-2">Да, изтрий го!</button>
+                    <a href="{% url 'story-detail' object.story.id %}" class="btn btn-light">Не, върни ме назад</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

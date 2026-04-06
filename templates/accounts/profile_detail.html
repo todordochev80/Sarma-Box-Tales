@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Профил на {{ profile.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Карта на разказвача 🖋️</h4>
+                    {% if user.pk == profile.pk %}
+                        <span class="badge bg-warning text-dark">Това сте вие</span>
+                    {% endif %}
+                </div>
+                <div class="card-body text-center p-5">
+                    {% if profile.avatar %}
+                        <img src="{{ profile.avatar.url }}" class="rounded-circle mb-4 shadow" style="width: 160px; height: 160px; object-fit: cover; border: 4px solid #f8f9fa;">
+                    {% else %}
+                        <div class="bg-light rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 160px; height: 160px; font-size: 4rem;">👤</div>
+                    {% endif %}
+
+                    <h2 class="fw-bold mb-1">{{ profile.nickname|default:profile.username }}</h2>
+                    <p class="badge bg-outline-secondary border text-muted mb-3">{{ profile.rank }}</p>
+
+                    {% if user.pk == profile.pk %}
+                        <p class="text-primary mb-0 small">📧 {{ profile.email }} <small class="text-muted">(Вижда се само от вас)</small></p>
+                    {% endif %}
+
+                    <hr class="my-4">
+
+                    <div class="bio-section mb-4 text-start">
+                        <h6 class="text-uppercase text-muted fw-bold small">Биография 📜</h6>
+                        <p class="lead">{{ profile.bio|default:"Този разказвач все още е загадка... няма добавена биография." }}</p>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="{% url 'story-list' %}?author={{ profile.id }}" class="btn btn-outline-primary px-4">
+                            📚 Виж разказите на {{ profile.username }}
+                        </a>
+
+                        {% if user.pk == profile.pk %}
+                            <a href="{% url 'profile-edit' %}" class="btn btn-warning px-4">
+                                ⚙️ Редактирай профила
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer text-muted small bg-white border-0 text-center pb-4">
+                    Част от Sarma Box от: {{ profile.date_joined|date:"d M Y" }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

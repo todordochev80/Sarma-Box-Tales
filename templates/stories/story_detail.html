@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
+{% load reading_time_filter %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="story-detail mb-5">
         <h1 class="display-4">{{ story.title }}</h1>
-        <p class="text-muted">
-            Автор: <strong>{{ story.author.username }}</strong> |
-            Публикувано на: {{ story.created_at|date:"d.m.Y" }}
-        </p>
+        <div class="d-flex align-items-center text-muted mb-3">
+            {% if story.author.avatar %}
+                <img src="{{ story.author.avatar.url }}" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+            {% endif %}
+            <span>
+                Автор: <strong>{{ story.author.nickname|default:story.author.username }}</strong> |
+                Публикувано на: {{ story.created_at|date:"d.m.Y" }} |
+                <span class="badge bg-light text-dark border">⏱️ време за четене {{ story.content|reading_time }}</span>
+            </span>
+        </div>
         <hr>
         <div class="story-content lead">
             {{ story.content|linebreaks }}
@@ -16,6 +23,21 @@
 
     <hr>
 
+    <div class="card mb-5 border-primary shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Сподели мнение 🥟</h4>
+            <form method="post" action="{% url 'comment-create' story.id %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ comment_form.text }}
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary px-4 shadow-sm">Публикувай коментар</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <h3 class="mb-4">Коментари ({{ story.comments.count }})</h3>
 
     <div class="comments-list">
@@ -23,13 +45,38 @@
             {% if not comment.initial_comment %}
                 <div class="card mb-3 border-0 shadow-sm bg-light">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <strong>{{ comment.author.username }}</strong>
-                            <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
-                        </div>
-                        <p class="my-2">{{ comment.text }}</p>
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-center mb-2">
+                                {% if comment.author.avatar %}
+                                    <img src="{{ comment.author.avatar.url }}" class="rounded-circle me-3 shadow-sm" style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #fff;">
+                                {% else %}
+                                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white me-3 shadow-sm" style="width: 45px; height: 45px; font-weight: bold;">
+                                        {{ comment.author.username|slice:":1"|upper }}
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <strong class="text-dark d-block" style="line-height: 1.2;">{{ comment.author.nickname|default:comment.author.username }}</strong>
+                                    <small class="text-muted" style="font-size: 0.7rem;">{{ comment.author.rank }}</small>
+                                    {% if comment.author == story.author %}
+                                        <span class="badge bg-primary ms-1" style="font-size: 0.55rem; vertical-align: middle;">Автор на историята</span>
+                                    {% endif %}
+                                </div>
+                            </div>
 
-                        <button class="btn btn-sm btn-outline-secondary border-0"
+                            <div class="comment-actions">
+                                <small class="text-muted me-2" style="font-size: 0.75rem;">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
+                                {% if user == comment.author %}
+                                    <a href="{% url 'comment-edit' comment.id %}" class="btn btn-sm btn-outline-secondary border-0" title="Редактирай">✏️</a>
+                                {% endif %}
+                                {% if user == comment.author or perms.actions.delete_comment %}
+                                    <a href="{% url 'comment-delete' comment.id %}" class="btn btn-sm btn-outline-danger border-0" title="Изтрий">🗑️</a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <p class="my-2 text-secondary ms-1">{{ comment.text }}</p>
+
+                        <button class="btn btn-sm btn-link text-decoration-none p-0 ms-1"
                                 onclick="document.getElementById('reply-form-{{ comment.id }}').style.display='block'">
                             ↩ Отговори
                         </button>
@@ -38,28 +85,53 @@
                             <form method="post" action="{% url 'comment-create' story.id %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="initial_comment_id" value="{{ comment.id }}">
-                                <textarea name="text" class="form-control mb-2" rows="2" placeholder="Напиши отговор..."></textarea>
+                                <textarea name="text" class="form-control mb-2 shadow-sm" rows="2" placeholder="Напиши отговор..."></textarea>
                                 <button type="submit" class="btn btn-sm btn-primary">Изпрати</button>
-                                <button type="button" class="btn btn-sm btn-link text-muted"
+                                <button type="button" class="btn btn-sm btn-link text-muted text-decoration-none"
                                         onclick="this.parentElement.parentElement.style.display='none'">Отказ</button>
                             </form>
                         </div>
 
                         <div class="replies ms-5 mt-3 border-start ps-3">
                             {% for reply in comment.replies.all %}
-                                <div class="reply mb-2 p-2 bg-white rounded-3 shadow-sm">
-                                    <div class="d-flex justify-content-between">
-                                        <small class="fw-bold text-primary">{{ reply.author.username }}</small>
-                                        <small class="text-muted" style="font-size: 0.75rem;">{{ reply.created_at|date:"H:i" }}</small>
+                                <div class="reply mb-2 p-2 bg-white rounded-3 shadow-sm border-bottom">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            {% if reply.author.avatar %}
+                                                <img src="{{ reply.author.avatar.url }}" class="rounded-circle me-2" style="width: 25px; height: 25px; object-fit: cover;">
+                                            {% endif %}
+                                            <small class="fw-bold text-primary">{{ reply.author.nickname|default:reply.author.username }}</small>
+                                            <small class="text-muted ms-2" style="font-size: 0.65rem;">{{ reply.author.rank }}</small>
+                                        </div>
+                                        <div class="reply-actions">
+                                            {% if user == reply.author %}
+                                                <a href="{% url 'comment-edit' reply.id %}" class="text-secondary text-decoration-none small me-2" title="Редактирай">✏️</a>
+                                            {% endif %}
+                                            {% if user == reply.author or perms.actions.delete_comment %}
+                                                <a href="{% url 'comment-delete' reply.id %}" class="text-danger text-decoration-none small" title="Изтрий">🗑️</a>
+                                            {% endif %}
+                                            <small class="text-muted ms-1" style="font-size: 0.7rem;">{{ reply.created_at|date:"H:i" }}</small>
+                                        </div>
                                     </div>
-                                    <p class="small mb-0">{{ reply.text }}</p>
+                                    <p class="small mb-0 text-muted ms-1">{{ reply.text }}</p>
                                 </div>
                             {% endfor %}
                         </div>
                     </div>
                 </div>
             {% endif %}
+        {% empty %}
+            <div class="text-center py-4">
+                <p class="text-muted fst-italic">Все още няма коментари. Бъди първият! 🥟</p>
+            </div>
         {% endfor %}
     </div>
+</div>
+
+<div class="mt-5 mb-5 text-center">
+    <hr class="mb-4">
+    <a href="{% url 'story-list' %}" class="btn btn-outline-primary px-4 shadow-sm rounded-pill">
+        ⬅ Обратно към всички истории
+    </a>
 </div>
 {% endblock %}

@@ -9,8 +9,8 @@ class StorytellerAdmin(UserAdmin):
     add_form = StorytellerCreationForm
     form = StorytellerChangeForm
     model = Storyteller
-    list_display = ["username", "email", "nickname", "rank", "is_staff"]
+    list_display = ["username", "email", "nickname", "rank", "is_staff", 'avatar']
 
     fieldsets = UserAdmin.fieldsets + (
-        ("Допълнителна информация", {"fields": ("nickname", "bio", "rank")}),
+        ("Допълнителна информация", {"fields": ("nickname", "bio", "rank", 'avatar')}),
     )
