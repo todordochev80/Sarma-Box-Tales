@@ -1,0 +1,11 @@
+from django import forms
+
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=100, label="Вашето име")
+    email = forms.EmailField(label="Вашият имейл")
+    message = forms.CharField(widget=forms.Textarea, label="Съобщение")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})

@@ -1,53 +1,86 @@
-1. Project Overview 📖
-Sarma Box Tales – платформа за абсурдни истории. Спомени, че използваш Django и DRF.
+Sarma Box Tales 📖
+Django Advanced Project @ SoftUni
 
-2. Features 
-User Management: Extended User Model, Profiles, Roles.
+Sarma Box Tales is a unique storytelling platform built with Django, designed for sharing and exploring "absurd and funny" stories. This project demonstrates advanced backend architecture, asynchronous task processing, and RESTful API integration.
 
-Stories: Full CRUD functionality, categories, and search.
+✨ Core Features
+Custom User Management: Extended Storyteller model with profiles, custom avatars, and community ranks.
 
-API: RESTful endpoints for stories.
+Story Engine: Full CRUD for stories, categorized by "Sarma Boxes" with tagging support.
 
-Async Tasks: Celery & Redis for welcome emails.
+RESTful API: Fully documented API endpoints for stories using Django REST Framework.
 
-Security: CSRF protection, .env configuration, login requirements.
+Asynchronous Tasks: Automated welcome emails triggered by registration using Celery and Redis.
 
-3. Tech Stack 🛠️
-Framework: Django, Django REST Framework
+Advanced Search: Filter-ready search system by content, category, author, and tags.
+
+Security: Robust protection with environment variables, CSRF tokens, and role-based permissions (Moderators/Authors).
+
+🛠️ Technical Stack
+Framework: Django 5.x / Django REST Framework
 
 Database: PostgreSQL
 
 Task Queue: Celery & Redis
 
-Styling: Bootstrap / Custom CSS
+Testing: Django TestCase (15 units covering Models, Forms, and Views)
 
-Environment: Python-dotenv
+Styling: Bootstrap 5 & Custom CSS
 
-4. Local Setup Instructions 🚀
+🔧 Local Setup Instructions
+Clone the repository:
 
-Clone the repo: git clone ...
+Bash
+git clone <https://github.com/todordochev80/Sarma-Box-Tales>
+cd sarma_box_tales
+Setup Virtual Environment:
 
-Virtual Env: python -m venv .venv и source .venv/bin/activate
+Bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+Install Dependencies:
 
-Install requirements: pip install -r requirements.txt
+Bash
+pip install -r requirements.txt
+Environment Configuration:
+Create a .env file in the root directory based on the .env.sample provided below.
 
-Database: Настройте PostgreSQL и създайте база данни.
+Migrations:
 
-Migrations: python manage.py migrate
+Bash
+python manage.py migrate
+Start Celery Worker (Required for emails):
 
-Admin: python manage.py createsuperuser
+Bash
+celery -A sarma_box_tales worker -l info
+Run Server:
 
-Run: python manage.py runserver
-
-5. Environment Variables (.env) 🔐
-примерна структура (SAMPLE), без да разкриваш истински пароли:
-SECRET_KEY=your_secret_key
+Bash
+python manage.py runserver
+🔐 Environment Variables (.env.sample)
+Фрагмент от код
+SECRET_KEY=your_django_secret_key
 DEBUG=True
+ALLOWED_HOSTS=127.0.0.1,localhost
 DB_NAME=sarma_box_tales_db
 DB_USER=postgres
-DB_PASS=your_pass
+DB_PASS=your_db_password
 DB_HOST=127.0.0.1
 DB_PORT=5432
+CELERY_BROKER_URL=redis://127.0.0.1:6379/0
+🧪 Testing
+The project includes 15 automated tests. Run them using:
 
-6. Testing 🧪
-15 unit tests, обхващащи модели, форми и изгледи. Пускат се с: python manage.py test.
+Bash
+python manage.py test
+🌐 API Documentation
+List Stories: GET /stories/api/
+
+Story Detail: GET /stories/api/<id>/
+
+Create Story: POST /stories/api/ (Requires Authentication)
+
+
+Файл .env.sample: Създай един такъв файл в главната папка, който съдържа само имената на променливите (без паролите), за да може оценителят да знае какво да попълни.
+
+Линк към AWS: Ако вече имаш работещ линк от деплоймънта, добави го най-отгоре под заглавието в секция ## 🚀 Live Demo.

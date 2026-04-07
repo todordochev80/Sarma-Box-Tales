@@ -39,6 +39,8 @@ class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_success_url(self):
         return self.object.story.get_absolute_url() if hasattr(self.object.story, 'get_absolute_url') else reverse_lazy('story-detail', kwargs={'pk': self.object.story.id})
 
+
+
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Comment
     template_name = 'actions/comment_confirm_delete.html'

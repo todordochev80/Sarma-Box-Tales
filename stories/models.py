@@ -18,6 +18,7 @@ class Story(models.Model):
     content = models.TextField(help_text="")
     created_at = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, related_name='stories', blank=True)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_stories', blank=True)
 
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,

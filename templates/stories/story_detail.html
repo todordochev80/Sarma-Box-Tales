@@ -16,9 +16,22 @@
             </span>
         </div>
         <hr>
+
         <div class="story-content lead">
             {{ story.content|linebreaks }}
         </div>
+
+        {% if user.is_authenticated and user == story.author %}
+            <div class="mt-4 p-3 bg-light border rounded shadow-sm">
+                <p class="text-muted small mb-2 uppercase fw-bold">Управление на твоя разказ:</p>
+                <a href="{% url 'story-edit' story.pk %}" class="btn btn-sm btn-warning px-3 shadow-sm">
+                    ✏️ Редактирай
+                </a>
+                <a href="{% url 'story-delete' story.pk %}" class="btn btn-sm btn-danger px-3 shadow-sm ms-2">
+                    🗑️ Изтрий
+                </a>
+            </div>
+        {% endif %}
     </div>
 
     <hr>
