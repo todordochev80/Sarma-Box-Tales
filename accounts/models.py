@@ -17,7 +17,7 @@ class Storyteller(AbstractUser):
         max_length=500,
         blank=True,
         verbose_name="Биография",
-        help_text="Разкажете накратко за Вашия кулинарен или разказвачески опит."
+        help_text="Разкажете накратко за Вашия творчески опит."
     )
     location = models.CharField(
         max_length=100,
@@ -29,7 +29,7 @@ class Storyteller(AbstractUser):
         max_length=30,
         default="Лозова сърмичка",
         verbose_name="Ранг",
-        help_text="Вашият статус в общността на Sarma Box Tales"
+        help_text="Вашият статус в общността на 'Разкази от кутията със сармички'"
     )
     website = models.URLField(
         blank=True,
